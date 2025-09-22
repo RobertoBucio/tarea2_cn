@@ -1,56 +1,31 @@
 const Computo = require('../models/Computo');
 
-exports.create = async (req, res) => {
-    try {
-        const body = req.body;
-        const c = new Computo(body);
-        await c.save();
-        res.status(201).json({ ok: true, data: c });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ ok: false, error: 'Error creando computo' });
-    }
+exports.createComputo = async (req, res) => {
+  try {
+    const computo = await Computo.create(req.body);
+    res.status(201).json(computo);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-exports.list = async (req, res) => {
-    try {
-        const items = await Computo.find();
-        res.json({ ok: true, data: items });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ ok: false, error: 'Error listando computos' });
-    }
+exports.getComputos = async (req, res) => {
+  const computos = await Computo.find();
+  res.json(computos);
 };
 
-exports.getById = async (req, res) => {
-    try {
-        const item = await Computo.findById(req.params.id);
-        if (!item) return res.status(404).json({ ok: false, error: 'No encontrado' });
-        res.json({ ok: true, data: item });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ ok: false, error: 'Error obteniendo computo' });
-    }
+exports.getComputoById = async (req, res) => {
+  const computo = await Computo.findById(req.params.id);
+  if (!computo) return res.status(404).json({ message: 'No encontrado' });
+  res.json(computo);
 };
 
-exports.update = async (req, res) => {
-    try {
-        const item = await Computo.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!item) return res.status(404).json({ ok: false, error: 'No encontrado' });
-        res.json({ ok: true, data: item });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ ok: false, error: 'Error actualizando computo' });
-    }
+exports.updateComputo = async (req, res) => {
+  const computo = await Computo.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(computo);
 };
 
-exports.remove = async (req, res) => {
-    try {
-        const item = await Computo.findByIdAndDelete(req.params.id);
-        if (!item) return res.status(404).json({ ok: false, error: 'No encontrado' });
-        res.json({ ok: true, data: item });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ ok: false, error: 'Error eliminando computo' });
-    }
+exports.deleteComputo = async (req, res) => {
+  await Computo.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Computo eliminado' });
 };

@@ -12,16 +12,14 @@ services:
       MONGO_INITDB_DATABASE: ugto_db
 
   mongo-express:
-  image: mongo-express:latest
-  container_name: mongo_express
-  restart: always
-  ports:
-    - "8081:8081"
-  environment:
-    ME_CONFIG_MONGODB_SERVER: mongo
-    ME_CONFIG_MONGODB_PORT: 27017
-    ME_CONFIG_BASICAUTH_USERNAME: ad
-    ME_CONFIG_BASICAUTH_PASSWORD: ad
-    ME_CONFIG_BASICAUTH_REALM: "Mongo Express"
-  depends_on:
-    - mongo
+    image: mongo-express:latest
+    container_name: mongo_express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_BASICAUTH_ENABLED: "false"
+    depends_on:
+      - mongo

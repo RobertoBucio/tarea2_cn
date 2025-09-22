@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>CRUD Computo</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Computadoras</h1>
+
+  <button id="loadComputos">Cargar Computadoras</button>
+
+  <ul id="computoList"></ul>
+
+  <h2>Agregar Computadora</h2>
+  <form id="addComputoForm">
+    <input type="text" id="marca" placeholder="Marca" required><br>
+    <input type="text" id="modelo" placeholder="Modelo" required><br>
+    <input type="text" id="descripcion" placeholder="Descripción"><br>
+    <input type="number" id="precio" placeholder="Precio" required><br>
+    <input type="number" id="stock" placeholder="Stock" required><br>
+    <button type="submit">Agregar</button>
+  </form>
+
+  <script src="/app.js"></script>
+</body>
+</html>

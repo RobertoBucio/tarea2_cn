@@ -1,13 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const ctrl = require('../controllers/computoController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const protect = require('../middlewares/authMiddleware');
+const {
+  createComputo,
+  getComputos,
+  getComputoById,
+  updateComputo,
+  deleteComputo
+} = require('../controllers/computoController');
 
-// CRUD (protegido)
-router.post('/', authMiddleware, ctrl.create);
-router.get('/', ctrl.list);
-router.get('/:id', ctrl.getById);
-router.put('/:id', authMiddleware, ctrl.update);
-router.delete('/:id', authMiddleware, ctrl.remove);
+router.get('/', getComputos);
+router.post('/', protect, createComputo);
+router.get('/:id', getComputoById);
+router.put('/:id', protect, updateComputo);
+router.delete('/:id', protect, deleteComputo);
 
 module.exports = router;
