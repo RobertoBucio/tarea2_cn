@@ -1,32 +1,49 @@
+// src/app.js
 const express = require('express');
 const path = require('path');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const connectDB = require('./config/database');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-dotenv.config();
+// Importar rutas
+const indexRouter = require('./routes/index'); 
+// si tienes más rutas, agrégalas aquí:
+// const usersRouter = require('./routes/users');
+
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Conectar MongoDB
-connectDB();
-
-// Configurar EJS
+// Configuración del motor de vistas
+app.set('views', path.join(__dirname, '..', 'views')); // carpeta views en raíz
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../views'));
+
+// Middlewares
+app.use(logger('dev'));                 // logs HTTP
+app.use(express.json());                // parsea JSON
+app.use(express.urlencoded({ extended: true })); // parsea forms
+app.use(cookieParser());                // parsea cookies
+
+// Servir archivos estáticos desde /public
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Rutas
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/computos', require('./routes/computoRoutes'));
+app.use('/', indexRouter);
+// app.use('/users', usersRouter); // ejemplo si agregas otra ruta
 
-// Rutas para renderizar EJS
-app.get('/', (req, res) => res.render('index'));
-app.get('/register', (req, res) => res.render('register'));
-app.get('/computos', (req, res) => res.render('computos'));
+// Manejo de error 404
+app.use((req, res, next) => {
+  res.status(404).render('error', {
+    message: 'Página no encontrada',
+    error: {}
+  });
+});
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Manejador de errores generales
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err : {}
+  });
+});
+
+module.exports = app;
